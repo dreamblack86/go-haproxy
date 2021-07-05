@@ -8,7 +8,7 @@ import (
 )
 
 // Response from HAProxy "show stat" command.
-type Stat struct {
+type ShowStatResponse struct {
 	PxName        string `csv:"# pxname"`
 	SvName        string `csv:"svname"`
 	Qcur          uint64 `csv:"qcur"`
@@ -111,7 +111,7 @@ type Stat struct {
 }
 
 // Equivalent to HAProxy "show stat" command.
-func (h *HAProxyClient) Stats() (stats []*Stat, err error) {
+func ShowStat(h HAProxy) (stats []*ShowStatResponse, err error) {
 	res, err := h.RunCommand("show stat")
 	if err != nil {
 		return nil, err
@@ -123,17 +123,6 @@ func (h *HAProxyClient) Stats() (stats []*Stat, err error) {
 	if err != nil {
 		return nil, fmt.Errorf("error reading csv: %s", err)
 	}
-
-	//	for _, s := range allStats {
-	//		switch s.SvName {
-	//		case "FRONTEND":
-	//			services.Frontends = append(services.Frontends, s)
-	//		case "BACKEND":
-	//			services.Backends = append(services.Backends, s)
-	//		default:
-	//			services.Listeners = append(services.Listeners, s)
-	//		}
-	//	}
 
 	return stats, nil
 }

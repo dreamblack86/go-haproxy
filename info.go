@@ -3,11 +3,11 @@ package haproxy
 import (
 	"fmt"
 
-	"github.com/bcicen/go-haproxy/kvcodec"
+	"github.com/dreamblack86/go-haproxy/kvcodec"
 )
 
 // Response from HAProxy "show info" command.
-type Info struct {
+type ShowInfoResponse struct {
 	Name                       string `kv:"Name"`
 	Version                    string `kv:"Version"`
 	ReleaseDate                string `kv:"Release_date"`
@@ -74,12 +74,12 @@ type Info struct {
 }
 
 // Equivalent to HAProxy "show info" command.
-func (h *HAProxyClient) Info() (*Info, error) {
+func ShowInfo(h HAProxy) (*ShowInfoResponse, error) {
 	res, err := h.RunCommand("show info")
 	if err != nil {
 		return nil, err
 	}
-	info := &Info{}
+	info := &ShowInfoResponse{}
 	err = kvcodec.Unmarshal(res, info)
 	if err != nil {
 		return nil, fmt.Errorf("error decoding response: %s", err)
